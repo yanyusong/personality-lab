@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { asset, cdnAsset } from "@/lib/asset";
 import { ROLES } from "@/core/roles";
 
 const JOBS = ["互联网/技术", "学生", "金融/商务", "教育/研究", "医疗", "创意/媒体", "制造/工程", "管理", "自由职业", "公共部门"];
@@ -70,18 +69,12 @@ export default function Home() {
         </div>
 
         <div className="mt-9">
-          <div className="mb-3 flex items-baseline justify-between">
-            <span className="text-[13px] font-bold">12 种人格角色</span>
-            <span className="text-[11.5px] text-ink-2/60">可能你是其中两个的混合</span>
-          </div>
-          <div className="no-scrollbar -mx-5 flex gap-3 overflow-x-auto px-5 pb-2">
+          <div className="mb-3 text-[13px] font-bold">12 种人格角色</div>
+          <div className="flex flex-wrap gap-1.5">
             {ROLES.map((r) => (
-              <div key={r.id} className="w-[104px] shrink-0">
-                <div className="overflow-hidden rounded-2xl bg-white shadow-sm" style={{ aspectRatio: "3/4" }}>
-                  <img src={cdnAsset(r.thumb)} alt={r.name} loading="lazy" decoding="async" width={312} height={416} className="h-full w-full object-cover" onError={(e) => { const t = e.currentTarget; if (!t.dataset.fb) { t.dataset.fb = "1"; t.src = asset(r.thumb); } }} />
-                </div>
-                <div className="mt-1.5 text-center text-[11.5px] font-semibold">{r.name}</div>
-              </div>
+              <span key={r.id} className="rounded-full bg-white px-2.5 py-1 text-[11.5px] font-medium text-ink-2/75 shadow-sm">
+                {r.name}
+              </span>
             ))}
           </div>
         </div>

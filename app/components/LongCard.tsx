@@ -2,22 +2,55 @@
 
 import { forwardRef, useImperativeHandle, useRef } from "react";
 import { toPng } from "html-to-image";
-import { asset, cdnAsset } from "@/lib/asset";
+import { cdnAsset } from "@/lib/asset";
+import { loadImage } from "@/lib/imgCache";
 import { DIM_LABEL, DIM_DESC, BIAS_LABEL, BIAS_ADVICE } from "@/core/scoring";
 import type { Dim, Result, Bias } from "@/core/types";
 
 export type LongCardHandle = { generate: () => Promise<string | null> };
 
-type Props = { res: Result; qr: string };
+type Props = { res: Result; qr: string; imgSrc?: string };
 
 const W = 1080;
 
-export const LongCard = forwardRef<LongCardHandle, Props>(function LongCard({ res, qr }, ref) {
+export const LongCard = forwardRef<LongCardHandle, Props>(function LongCard({ res, qr, imgSrc }, ref) {
   const node = useRef<HTMLDivElement>(null);
   useImperativeHandle(ref, () => ({
     generate: async () => {
       if (!node.current) return null;
-      return toPng(node.current, { pixelRatio: 1, cacheBust: true, backgroundColor: "#FFF8F0" });
+      // 兜底：还没拿到 dataURL 就现取（跨域图在 canvas 里会变空白）
+      const hero = node.current.querySelector<HTMLImageElement>("img[data-hero]");
+      if (hero && !hero.getAttribute("src")?.startsWith("data:")) {
+        const d = await loadImage(r.image);
+        if (d) {
+          hero.src = d;
+          try {
+            await hero.decode();
+          } catch {
+            /* ignore */
+          }
+        }
+      }
+      // 等所有图片解码完成，避免点太快截到空白
+      await Promise.all(
+        Array.from(node.current.querySelectorAll("img")).map(async (im) => {
+          try {
+            if (!im.complete) {
+              await new Promise<void>((done) => {
+                im.addEventListener("load", () => done(), { once: true });
+                im.addEventListener("error", () => done(), { once: true });
+                setTimeout(done, 5000);
+              });
+            }
+            if (typeof im.decode === "function") await im.decode().catch(() => {});
+          } catch {
+            /* 单张失败不影响整体 */
+          }
+        })
+      );
+      // 让浏览器先完成一次布局/绘制
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      return toPng(node.current, { pixelRatio: 1, cacheBust: false, backgroundColor: "#FFF8F0" });
     },
   }));
 
@@ -28,7 +61,7 @@ export const LongCard = forwardRef<LongCardHandle, Props>(function LongCard({ re
     .slice(0, 3);
 
   return (
-    <div style={{ position: "fixed", left: -99999, top: 0, pointerEvents: "none" }}>
+    <div style={{ position: "fixed", left: 0, top: 0, opacity: 0, zIndex: -1, pointerEvents: "none" }}>
       <div ref={node} style={{ width: W, background: "#FFF8F0", padding: "80px 76px 70px", boxSizing: "border-box", position: "relative" }}>
         {/* 右上角二维码 */}
         {qr && (
@@ -51,7 +84,7 @@ export const LongCard = forwardRef<LongCardHandle, Props>(function LongCard({ re
         {/* 公仔 */}
         <div style={{ marginTop: 34, height: 780, borderRadius: 36, overflow: "hidden" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={cdnAsset(r.image)} alt="" crossOrigin="anonymous" onError={(e) => { const t = e.currentTarget; if (!t.dataset.fb) { t.dataset.fb = "1"; t.removeAttribute("crossOrigin"); t.src = asset(r.image); } }} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 30%" }} />
+          <img data-hero src={imgSrc || cdnAsset(r.image)} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 30%" }} />
         </div>
 
         <Divider />

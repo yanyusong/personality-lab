@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { prefetchAllRoles } from "@/lib/imgCache";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { QUESTIONS } from "@/core/questions";
@@ -13,6 +14,12 @@ export default function Test() {
 
   const q = QUESTIONS[idx];
   const progress = useMemo(() => ((idx + (answers[q?.id] ? 1 : 0)) / QUESTIONS.length) * 100, [idx, answers, q]);
+
+  // 答题期间后台预取 12 张角色图，出结果时直接读缓存
+  useEffect(() => {
+    const t = setTimeout(() => { void prefetchAllRoles(); }, 600);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     const saved = sessionStorage.getItem("pp_answers");
