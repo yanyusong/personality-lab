@@ -3,7 +3,7 @@
 import { forwardRef, useImperativeHandle, useRef } from "react";
 import { toPng } from "html-to-image";
 import { asset } from "@/lib/asset";
-import { DIM_LABEL, BIAS_LABEL, BIAS_ADVICE } from "@/core/scoring";
+import { DIM_LABEL, DIM_DESC, BIAS_LABEL, BIAS_ADVICE } from "@/core/scoring";
 import type { Dim, Result, Bias } from "@/core/types";
 
 export type LongCardHandle = { generate: () => Promise<string | null> };
@@ -55,6 +55,10 @@ export const LongCard = forwardRef<LongCardHandle, Props>(function LongCard({ re
               </div>
               <div style={{ height: 14, background: "rgba(34,31,28,0.08)", borderRadius: 10, marginTop: 8, overflow: "hidden" }}>
                 <div style={{ width: `${res.profile.dims[d]}%`, height: "100%", background: r.color, borderRadius: 10 }} />
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 9, fontSize: 21, color: "rgba(34,31,28,0.58)" }}>
+                <span>{DIM_DESC[d][0]}</span>
+                <span>{DIM_DESC[d][1]}</span>
               </div>
             </div>
           ))}
