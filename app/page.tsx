@@ -29,7 +29,7 @@ export default function Home() {
           </div>
 
           <h1 className="text-[42px] font-black leading-[1.05] tracking-tight">
-            人格<span className="text-orange">剧本</span>
+            人格<span className="text-orange">档案</span>
           </h1>
           <p className="mt-3 text-[15px] leading-6 text-ink-2">
             你不是一种类型，你是一个会重复犯错的剧本。

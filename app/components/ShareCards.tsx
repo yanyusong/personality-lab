@@ -46,7 +46,7 @@ export const ShareCards = forwardRef<ShareCardsHandle, Props>(function ShareCard
           <div style={{ fontSize: 26, fontWeight: 900, letterSpacing: 8, color: r.color }}>{r.en} · {r.no}</div>
           <div style={{ fontSize: 120, fontWeight: 900, lineHeight: 1.06, marginTop: 8 }}>{r.name}</div>
           <div style={{ fontSize: 30, fontWeight: 700, color: "rgba(34,31,28,0.55)", marginTop: 10 }}>
-            人格剧本 · 第 {r.no} 号角色
+            人格档案 · 第 {r.no} 号角色
           </div>
         </div>
 
@@ -62,7 +62,7 @@ export const ShareCards = forwardRef<ShareCardsHandle, Props>(function ShareCard
 
         <div style={{ position: "absolute", left: 76, right: 76, bottom: 84, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div>
-            <div style={{ fontSize: 30, fontWeight: 900 }}>人格剧本</div>
+            <div style={{ fontSize: 30, fontWeight: 900 }}>人格档案</div>
             <div style={{ fontSize: 22, color: "rgba(34,31,28,0.55)", marginTop: 6 }}>15 题 · 3 分钟 · 不用登录</div>
           </div>
           {qr && (
@@ -138,7 +138,7 @@ export const ShareCards = forwardRef<ShareCardsHandle, Props>(function ShareCard
         </div>
 
         <div style={{ position: "absolute", left: 76, right: 76, bottom: 46, display: "flex", justifyContent: "space-between", fontSize: 20, color: "rgba(34,31,28,0.4)" }}>
-          <span>{r.name} · 人格剧本</span><span>2 / 3</span>
+          <span>{r.name} · 人格档案</span><span>2 / 3</span>
         </div>
       </div>
 
@@ -195,7 +195,7 @@ export const ShareCards = forwardRef<ShareCardsHandle, Props>(function ShareCard
 
         <div style={{ position: "absolute", left: 76, right: 76, bottom: 56, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div>
-            <div style={{ fontSize: 26, fontWeight: 900 }}>扫码，测你的剧本</div>
+            <div style={{ fontSize: 26, fontWeight: 900 }}>扫码，测你的人格档案</div>
             <div style={{ fontSize: 20, color: "rgba(34,31,28,0.5)", marginTop: 6 }}>15 题 · 3 分钟 · 不用登录</div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>

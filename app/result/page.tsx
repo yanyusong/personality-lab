@@ -70,7 +70,7 @@ export default function ResultPage() {
       .slice(0, 3);
   }, [res]);
 
-  const fileName = () => `人格剧本_${res?.primary.name ?? "结果"}_长图.png`;
+  const fileName = () => `人格档案_${res?.primary.name ?? "结果"}_长图.png`;
 
   const downloadLong = (dataUrl: string) => {
     const a = document.createElement("a");
@@ -87,7 +87,7 @@ export default function ResultPage() {
       const file = new File([blob], fileName(), { type: "image/png" });
       const nav = navigator as Navigator & { canShare?: (d: ShareData) => boolean };
       if (nav.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file], title: "人格剧本" });
+        await navigator.share({ files: [file], title: "人格档案" });
         setSavedHint("已保存（如果没看到，请在弹窗里选「存储图像」）");
         return;
       }

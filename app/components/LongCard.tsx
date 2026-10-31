@@ -221,8 +221,8 @@ export const LongCard = forwardRef<LongCardHandle, Props>(function LongCard({ re
 
         <div style={{ marginTop: 34, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div>
-            <div style={{ fontSize: 32, fontWeight: 900 }}>人格剧本</div>
-            <div style={{ fontSize: 22, color: "rgba(34,31,28,0.55)", marginTop: 6 }}>扫码，测你的剧本 · 15 题 3 分钟</div>
+            <div style={{ fontSize: 32, fontWeight: 900 }}>人格档案</div>
+            <div style={{ fontSize: 22, color: "rgba(34,31,28,0.55)", marginTop: 6 }}>扫码，测你的人格档案 · 15 题 3 分钟</div>
           </div>
           {qr && (
             <div style={{ background: "#fff", padding: 10, borderRadius: 18 }}>
