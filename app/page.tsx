@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { asset } from "@/lib/asset";
 import { motion } from "framer-motion";
 import { ROLES } from "@/core/roles";
 
@@ -84,7 +84,7 @@ export default function Home() {
             {ROLES.map((r) => (
               <div key={r.id} className="w-[104px] shrink-0">
                 <div className="overflow-hidden rounded-2xl bg-white shadow-sm" style={{ aspectRatio: "3/4" }}>
-                  <Image src={r.image} alt={r.name} width={312} height={416} className="h-full w-full object-cover" />
+                  <img src={asset(r.image)} alt={r.name} className="h-full w-full object-cover" />
                 </div>
                 <div className="mt-1.5 text-center text-[11.5px] font-semibold">{r.name}</div>
               </div>

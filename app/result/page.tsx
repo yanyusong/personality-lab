@@ -2,15 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import QRCode from "qrcode";
 import { toPng } from "html-to-image";
 import { analyze, DIM_DESC, DIM_LABEL, BIAS_LABEL, BIAS_ADVICE } from "@/core/scoring";
+import { asset, BASE_PATH } from "@/lib/asset";
 import type { Bias, Dim, Result } from "@/core/types";
 
 const ORDER: Dim[] = ["O", "C", "E", "A", "N"];
-const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export default function ResultPage() {
   const router = useRouter();
@@ -31,7 +30,7 @@ export default function ResultPage() {
   }, [router]);
 
   useEffect(() => {
-    const url = `${window.location.origin}${BASE}/?from=card`;
+    const url = `${window.location.origin}${BASE_PATH}/?from=card`;
     QRCode.toDataURL(url, { margin: 1, width: 320, color: { dark: "#221F1C", light: "#FFFFFF" } })
       .then(setQr)
       .catch(() => {});
@@ -78,7 +77,7 @@ export default function ResultPage() {
         <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.45 }}
           className="relative overflow-hidden rounded-[32px] shadow-xl">
           <div className="relative" style={{ aspectRatio: "3/4" }}>
-            <Image src={r.image} alt={r.name} fill priority sizes="520px" className="object-cover" unoptimized />
+            <img src={asset(r.image)} alt={r.name} className="h-full w-full object-cover" />
             <div className="absolute inset-x-0 top-0 h-40 scrim-top" />
             <div className="absolute inset-x-0 bottom-0 h-56 scrim-bottom" />
             <div className="absolute left-5 top-5">
@@ -219,7 +218,7 @@ export default function ResultPage() {
           {/* 图片区 */}
           <div style={{ position: "absolute", top: 210, left: 0, right: 0, bottom: 420, overflow: "hidden" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`${BASE}${r.image}`} alt="" crossOrigin="anonymous" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <img src={asset(r.image)} alt="" crossOrigin="anonymous" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
 
           {/* 顶部实色标题带 */}
