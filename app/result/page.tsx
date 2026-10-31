@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import QRCode from "qrcode";
-import { toPng } from "html-to-image";
+import { ShareCards, type ShareCardsHandle } from "@/app/components/ShareCards";
 import { analyze, DIM_DESC, DIM_LABEL, BIAS_LABEL, BIAS_ADVICE } from "@/core/scoring";
 import { asset, BASE_PATH } from "@/lib/asset";
 import type { Bias, Dim, Result } from "@/core/types";
@@ -16,8 +16,8 @@ export default function ResultPage() {
   const [res, setRes] = useState<Result | null>(null);
   const [qr, setQr] = useState<string>("");
   const [sharing, setSharing] = useState(false);
-  const [preview, setPreview] = useState<string>("");
-  const cardRef = useRef<HTMLDivElement>(null);
+  const [previews, setPreviews] = useState<string[]>([]);
+  const shareRef = useRef<ShareCardsHandle>(null);
 
   useEffect(() => {
     const raw = sessionStorage.getItem("pp_answers");
@@ -44,21 +44,27 @@ export default function ResultPage() {
   }, [res]);
 
   const makeCard = async () => {
-    if (!cardRef.current) return;
+    if (!shareRef.current) return;
     setSharing(true);
     try {
-      const dataUrl = await toPng(cardRef.current, { pixelRatio: 1, cacheBust: true, backgroundColor: "#FFF8F0" });
-      setPreview(dataUrl);
-      const a = document.createElement("a");
-      a.href = dataUrl;
-      a.download = `人格剧本_${res?.primary.name ?? "结果"}.png`;
-      a.click();
+      const imgs = await shareRef.current.generate();
+      setPreviews(imgs);
+      // 浏览器会拦截连续多个自动下载，只自动存第一张，其余点"保存"按钮
+      if (imgs[0]) downloadOne(imgs[0], 0);
     } catch (e) {
       console.error(e);
     } finally {
       setSharing(false);
     }
   };
+
+  const downloadOne = (url: string, i: number) => {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `人格剧本_${res?.primary.name ?? "结果"}_${i + 1}.png`;
+    a.click();
+  };
+
 
   if (!res) return <main className="min-h-dvh bg-cream" />;
   const r = res.primary;
@@ -197,55 +203,37 @@ export default function ResultPage() {
         </Section>
 
         <button onClick={makeCard} disabled={sharing} className="btn-primary mt-8 w-full py-4 text-[16px] disabled:opacity-60">
-          {sharing ? "生成中…" : "生成分享卡"}
+          {sharing ? "生成中…" : "生成 3 张分享图"}
         </button>
         <p className="mt-3 text-center text-[11px] leading-5 text-ink-2/55">
-          分享卡带二维码，朋友扫码可以直接测
+          角色卡 + 刻度与暗礁 + 行动剧本，一套三张，带二维码
         </p>
 
-        {preview && (
-          <div className="mt-6">
-            <div className="mb-2 text-[12px] font-bold text-ink-2/70">分享卡预览（已下载）</div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={preview} alt="分享卡" className="w-full rounded-2xl shadow-lg" />
+        {previews.length > 0 && (
+          <div className="mt-7">
+            <div className="mb-3 flex items-baseline justify-between">
+              <span className="text-[13px] font-black">分享图已生成（第 1 张自动保存）</span>
+              <span className="text-[11px] text-ink-2/50">长按也能单独保存</span>
+            </div>
+            <div className="space-y-4">
+              {previews.map((url, i) => (
+                <div key={i} className="relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={url} alt={`分享图 ${i + 1}`} className="w-full rounded-2xl shadow-lg" />
+                  <button
+                    onClick={() => downloadOne(url, i)}
+                    className="absolute right-3 top-3 rounded-full bg-white/90 px-3 py-1.5 text-[12px] font-bold shadow"
+                  >
+                    保存第 {i + 1} 张
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
 
-      {/* 离屏分享卡 */}
-      <div className="pointer-events-none fixed -left-[9999px] top-0">
-        <div ref={cardRef} style={{ width: 1080, height: 1440, background: "#FFF8F0", position: "relative", overflow: "hidden" }}>
-          {/* 图片区 */}
-          <div style={{ position: "absolute", top: 210, left: 0, right: 0, bottom: 420, overflow: "hidden" }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={asset(r.image)} alt="" crossOrigin="anonymous" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          </div>
-
-          {/* 顶部实色标题带 */}
-          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 210, background: "#FFF8F0", padding: "56px 64px 0" }}>
-            <div style={{ fontSize: 26, fontWeight: 900, letterSpacing: 6, color: r.color }}>{r.en} · {r.no}</div>
-            <div style={{ fontSize: 104, fontWeight: 900, lineHeight: 1.05, marginTop: 6 }}>{r.name}</div>
-          </div>
-
-          {/* 底部实色信息带 */}
-          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 420, background: "#FFF8F0", padding: "34px 64px 0" }}>
-            <div style={{ fontSize: 40, fontWeight: 800, lineHeight: 1.4 }}>{r.verdict}</div>
-            <div style={{ fontSize: 24, marginTop: 10, color: "rgba(34,31,28,0.62)" }}>{r.oneLine}</div>
-            <div style={{ display: "flex", alignItems: "center", gap: 26, marginTop: 26 }}>
-              {qr && (
-                <div style={{ background: "#fff", padding: 10, borderRadius: 18, boxShadow: "0 6px 18px rgba(0,0,0,0.10)" }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={qr} alt="qr" style={{ width: 148, height: 148, display: "block" }} />
-                </div>
-              )}
-              <div>
-                <div style={{ fontSize: 26, fontWeight: 900 }}>扫码，测你的剧本</div>
-                <div style={{ fontSize: 19, color: "rgba(34,31,28,0.55)", marginTop: 6 }}>15 题 · 3 分钟 · 不用登录</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ShareCards ref={shareRef} res={res} qr={qr} />
     </main>
   );
 }
