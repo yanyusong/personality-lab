@@ -18,39 +18,60 @@ export const LongCard = forwardRef<LongCardHandle, Props>(function LongCard({ re
   useImperativeHandle(ref, () => ({
     generate: async () => {
       if (!node.current) return null;
-      // 兜底：还没拿到 dataURL 就现取（跨域图在 canvas 里会变空白）
-      const hero = node.current.querySelector<HTMLImageElement>("img[data-hero]");
-      if (hero && !hero.getAttribute("src")?.startsWith("data:")) {
-        const d = await loadImage(r.image);
-        if (d) {
-          hero.src = d;
-          try {
-            await hero.decode();
-          } catch {
-            /* ignore */
-          }
+
+      // 1) 先把角色图拿到（dataURL，同源，canvas 可直接绘制）
+      const dataUrl = imgSrc || (await loadImage(r.image));
+
+      // 2) 模板（文字/二维码）截图：图片区先留白
+      const base = await toPng(node.current, {
+        pixelRatio: 1,
+        cacheBust: false,
+        backgroundColor: "#FFF8F0",
+      });
+
+      if (!dataUrl) return base;
+
+      // 3) 用 canvas 把公仔按 cover 裁切后叠到留白处
+      //    —— 不依赖 foreignObject 渲染 <img>，Safari/微信内核都能出图
+      try {
+        const nodeRect = node.current.getBoundingClientRect();
+        const ph = node.current.querySelector<HTMLElement>("[data-photo]");
+        if (!ph) return base;
+        const pr = ph.getBoundingClientRect();
+        const x = pr.left - nodeRect.left;
+        const y = pr.top - nodeRect.top;
+        const w = pr.width;
+        const h = pr.height;
+
+        const [baseImg, photo] = await Promise.all([loadImgEl(base), loadImgEl(dataUrl)]);
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(nodeRect.width);
+        canvas.height = Math.round(nodeRect.height);
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return base;
+        ctx.drawImage(baseImg, 0, 0, canvas.width, canvas.height);
+
+        const radius = 36;
+        ctx.save();
+        roundRect(ctx, x, y, w, h, radius);
+        ctx.clip();
+        // cover 裁切，焦点偏上 30%
+        const ir = photo.width / photo.height;
+        const br = w / h;
+        let sx = 0, sy = 0, sw = photo.width, sh = photo.height;
+        if (ir > br) {
+          sw = photo.height * br;
+          sx = (photo.width - sw) / 2;
+        } else {
+          sh = photo.width / br;
+          sy = (photo.height - sh) * 0.3;
         }
+        ctx.drawImage(photo, sx, sy, sw, sh, x, y, w, h);
+        ctx.restore();
+        return canvas.toDataURL("image/png");
+      } catch {
+        return base;
       }
-      // 等所有图片解码完成，避免点太快截到空白
-      await Promise.all(
-        Array.from(node.current.querySelectorAll("img")).map(async (im) => {
-          try {
-            if (!im.complete) {
-              await new Promise<void>((done) => {
-                im.addEventListener("load", () => done(), { once: true });
-                im.addEventListener("error", () => done(), { once: true });
-                setTimeout(done, 5000);
-              });
-            }
-            if (typeof im.decode === "function") await im.decode().catch(() => {});
-          } catch {
-            /* 单张失败不影响整体 */
-          }
-        })
-      );
-      // 让浏览器先完成一次布局/绘制
-      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-      return toPng(node.current, { pixelRatio: 1, cacheBust: false, backgroundColor: "#FFF8F0" });
     },
   }));
 
@@ -81,11 +102,8 @@ export const LongCard = forwardRef<LongCardHandle, Props>(function LongCard({ re
           <div style={{ fontSize: 25, color: "rgba(34,31,28,0.62)", marginTop: 10 }}>{r.oneLine}</div>
         </div>
 
-        {/* 公仔 */}
-        <div style={{ marginTop: 34, height: 780, borderRadius: 36, overflow: "hidden" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img data-hero src={imgSrc || cdnAsset(r.image)} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 30%" }} />
-        </div>
+        {/* 公仔（截图时由 canvas 叠加，模板里只留占位） */}
+        <div data-photo style={{ marginTop: 34, height: 780, borderRadius: 36, background: "#F3E9DD" }} />
 
         <Divider />
 
@@ -246,4 +264,23 @@ function biasLabel(v: number) {
   if (v <= 32) return "低";
   if (v <= 42) return "偏低";
   return "中等";
+}
+
+function loadImgEl(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
 }
