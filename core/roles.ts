@@ -4,7 +4,8 @@ import type { Role } from "./types";
 export const ROLES: Role[] = [
   {
     id: "breaker", no: "01", name: "破局者", en: "BREAKER",
-    color: "#FF6B35", accent: "#FFD166", image: "/roles/01_breaker.jpg",
+    color: "#FF6B35", accent: "#FFD166", image: "/roles/01_breaker.webp",
+    thumb: "/roles/thumbs/01_breaker.webp",
     axes: { speed: 0.88, risk: 0.82, relation: 0.22 },
     verdict: "别人还在评估风险，你已经撞了第一堵墙",
     oneLine: "你的默认设置是“先动起来，再想明白”。",
@@ -31,7 +32,8 @@ export const ROLES: Role[] = [
   },
   {
     id: "igniter", no: "02", name: "点火者", en: "IGNITER",
-    color: "#FFB23E", accent: "#FF7A45", image: "/roles/02_igniter.jpg",
+    color: "#FFB23E", accent: "#FF7A45", image: "/roles/02_igniter.webp",
+    thumb: "/roles/thumbs/02_igniter.webp",
     axes: { speed: 0.85, risk: 0.75, relation: 0.82 },
     verdict: "你先点燃人，再想怎么烧",
     oneLine: "你的能量不是自己的，是被人群点着的。",
@@ -58,7 +60,8 @@ export const ROLES: Role[] = [
   },
   {
     id: "mender", no: "03", name: "修补匠", en: "MENDER",
-    color: "#3FA98B", accent: "#8FE0C4", image: "/roles/03_mender.jpg",
+    color: "#3FA98B", accent: "#8FE0C4", image: "/roles/03_mender.webp",
+    thumb: "/roles/thumbs/03_mender.webp",
     axes: { speed: 0.75, risk: 0.25, relation: 0.3 },
     verdict: "哪里漏了你补哪里，不问为什么会漏",
     oneLine: "你是那种“事情总得有人做”时站出来的人。",
@@ -85,7 +88,8 @@ export const ROLES: Role[] = [
   },
   {
     id: "buffer", no: "04", name: "缓冲垫", en: "BUFFER",
-    color: "#7FB8C4", accent: "#CFE9EE", image: "/roles/04_buffer.jpg",
+    color: "#7FB8C4", accent: "#CFE9EE", image: "/roles/04_buffer.webp",
+    thumb: "/roles/thumbs/04_buffer.webp",
     axes: { speed: 0.7, risk: 0.2, relation: 0.88 },
     verdict: "冲突要炸的瞬间，你总在中间",
     oneLine: "你天生能感觉到房间里空气的变化。",
@@ -112,7 +116,8 @@ export const ROLES: Role[] = [
   },
   {
     id: "strategist", no: "05", name: "布局者", en: "STRATEGIST",
-    color: "#3355CC", accent: "#8FA8FF", image: "/roles/05_strategist.jpg",
+    color: "#3355CC", accent: "#8FA8FF", image: "/roles/05_strategist.webp",
+    thumb: "/roles/thumbs/05_strategist.webp",
     axes: { speed: 0.2, risk: 0.7, relation: 0.28 },
     verdict: "你落子前，已经在算第三步",
     oneLine: "你不太相信“先做了再说”，你相信“想清楚再动”。",
@@ -139,7 +144,8 @@ export const ROLES: Role[] = [
   },
   {
     id: "weaver", no: "06", name: "结网者", en: "WEAVER",
-    color: "#8A6BE0", accent: "#D6C4FF", image: "/roles/06_weaver.jpg",
+    color: "#8A6BE0", accent: "#D6C4FF", image: "/roles/06_weaver.webp",
+    thumb: "/roles/thumbs/06_weaver.webp",
     axes: { speed: 0.28, risk: 0.65, relation: 0.82 },
     verdict: "你的路，是别人帮你铺的",
     oneLine: "你相信关系是资产，也确实把它经营成了资产。",
@@ -166,7 +172,8 @@ export const ROLES: Role[] = [
   },
   {
     id: "watcher", no: "07", name: "守夜人", en: "WATCHER",
-    color: "#2E5A88", accent: "#C8D6E5", image: "/roles/07_watcher.jpg",
+    color: "#2E5A88", accent: "#C8D6E5", image: "/roles/07_watcher.webp",
+    thumb: "/roles/thumbs/07_watcher.webp",
     axes: { speed: 0.2, risk: 0.25, relation: 0.35 },
     verdict: "你先看哪里会塌，再决定走不走",
     oneLine: "你不是悲观，你只是先看到了坏结果。",
@@ -193,7 +200,8 @@ export const ROLES: Role[] = [
   },
   {
     id: "ledger", no: "08", name: "记账人", en: "LEDGER",
-    color: "#A9744F", accent: "#F2C879", image: "/roles/08_ledger.jpg",
+    color: "#A9744F", accent: "#F2C879", image: "/roles/08_ledger.webp",
+    thumb: "/roles/thumbs/08_ledger.webp",
     axes: { speed: 0.25, risk: 0.3, relation: 0.75 },
     verdict: "每一笔人情，你都记着",
     oneLine: "你不说，但你都记得。",
@@ -220,7 +228,8 @@ export const ROLES: Role[] = [
   },
   {
     id: "sampler", no: "09", name: "采样者", en: "SAMPLER",
-    color: "#8C9BB5", accent: "#FFD166", image: "/roles/09_sampler.jpg",
+    color: "#8C9BB5", accent: "#FFD166", image: "/roles/09_sampler.webp",
+    thumb: "/roles/thumbs/09_sampler.webp",
     axes: { speed: 0.35, risk: 0.6, relation: 0.5 },
     verdict: "什么都想试一口，什么都还没定",
     oneLine: "你的问题不是没兴趣，是兴趣太多。",
@@ -247,7 +256,8 @@ export const ROLES: Role[] = [
   },
   {
     id: "starling", no: "10", name: "惊弓者", en: "STARLING",
-    color: "#4C8DD9", accent: "#FF8A5B", image: "/roles/10_starling.jpg",
+    color: "#4C8DD9", accent: "#FF8A5B", image: "/roles/10_starling.webp",
+    thumb: "/roles/thumbs/10_starling.webp",
     axes: { speed: 0.8, risk: 0.45, relation: 0.55 },
     verdict: "情绪先到，判断后到",
     oneLine: "你的反应速度，比你自己的解释快半拍。",
@@ -274,7 +284,8 @@ export const ROLES: Role[] = [
   },
   {
     id: "backstop", no: "11", name: "兜底者", en: "BACKSTOP",
-    color: "#C9B893", accent: "#8FA36B", image: "/roles/11_backstop.jpg",
+    color: "#C9B893", accent: "#8FA36B", image: "/roles/11_backstop.webp",
+    thumb: "/roles/thumbs/11_backstop.webp",
     axes: { speed: 0.5, risk: 0.42, relation: 0.42 },
     verdict: "不声张，但最后都是你把事扛了",
     oneLine: "别人散场之后，你留下来收尾。",
@@ -301,7 +312,8 @@ export const ROLES: Role[] = [
   },
   {
     id: "standard", no: "12", name: "标准件", en: "STANDARD",
-    color: "#8A929C", accent: "#5B8DEF", image: "/roles/12_standard.jpg",
+    color: "#8A929C", accent: "#5B8DEF", image: "/roles/12_standard.webp",
+    thumb: "/roles/thumbs/12_standard.webp",
     axes: { speed: 0.45, risk: 0.3, relation: 0.7 },
     verdict: "有流程你才安全，没流程你会慌",
     oneLine: "你不是死板，你是需要知道边界在哪。",

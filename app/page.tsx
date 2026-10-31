@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { asset } from "@/lib/asset";
-import { motion } from "framer-motion";
+import { cdnAsset } from "@/lib/asset";
 import { ROLES } from "@/core/roles";
 
 const JOBS = ["互联网/技术", "学生", "金融/商务", "教育/研究", "医疗", "创意/媒体", "制造/工程", "管理", "自由职业", "公共部门"];
@@ -22,7 +21,7 @@ export default function Home() {
   return (
     <main className="min-h-dvh bg-cream">
       <div className="mx-auto max-w-[520px] px-5 pb-16 pt-10">
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+        <div className="animate-fade-in">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-[12px] font-semibold text-ink-2 shadow-sm">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-orange" />
             15 题 · 3 分钟 · 不用登录
@@ -36,14 +35,9 @@ export default function Home() {
             <br />
             15 题，看看你在关键时刻，会怎么选。
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          className="card mt-7 p-5"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
+        <div className="card mt-7 p-5 animate-fade-in-up">
           <label className="text-[13px] font-bold">用一句话说说你现在的状态</label>
           <textarea
             value={bio}
@@ -73,7 +67,7 @@ export default function Home() {
           <p className="mt-3 text-center text-[11.5px] leading-5 text-ink-2/60">
             用于自我探索，不构成心理诊断。结果仅存在你的浏览器里。
           </p>
-        </motion.div>
+        </div>
 
         <div className="mt-9">
           <div className="mb-3 flex items-baseline justify-between">
@@ -84,7 +78,7 @@ export default function Home() {
             {ROLES.map((r) => (
               <div key={r.id} className="w-[104px] shrink-0">
                 <div className="overflow-hidden rounded-2xl bg-white shadow-sm" style={{ aspectRatio: "3/4" }}>
-                  <img src={asset(r.image)} alt={r.name} className="h-full w-full object-cover" />
+                  <img src={cdnAsset(r.thumb)} alt={r.name} loading="lazy" decoding="async" width={312} height={416} className="h-full w-full object-cover" />
                 </div>
                 <div className="mt-1.5 text-center text-[11.5px] font-semibold">{r.name}</div>
               </div>

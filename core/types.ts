@@ -34,6 +34,7 @@ export interface Role {
   color: string;
   accent: string;
   image: string;
+  thumb: string;
   axes: { speed: number; risk: number; relation: number }; // 0-1
   verdict: string;
   oneLine: string;

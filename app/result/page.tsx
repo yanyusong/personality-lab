@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import QRCode from "qrcode";
 import { LongCard, type LongCardHandle } from "@/app/components/LongCard";
 import { analyze, DIM_DESC, DIM_LABEL, BIAS_LABEL, BIAS_ADVICE } from "@/core/scoring";
-import { asset, BASE_PATH } from "@/lib/asset";
+import { cdnAsset, BASE_PATH } from "@/lib/asset";
 import type { Bias, Dim, Result } from "@/core/types";
 
 const ORDER: Dim[] = ["O", "C", "E", "A", "N"];
@@ -79,7 +79,7 @@ export default function ResultPage() {
         <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.45 }}
           className="relative overflow-hidden rounded-[32px] shadow-xl">
           <div className="relative" style={{ aspectRatio: "3/4" }}>
-            <img src={asset(r.image)} alt={r.name} className="h-full w-full object-cover" />
+            <img src={cdnAsset(r.image)} alt={r.name} width={720} height={960} className="h-full w-full object-cover" />
             <div className="absolute inset-x-0 top-0 h-40 scrim-top" />
             <div className="absolute inset-x-0 bottom-0 h-56 scrim-bottom" />
             <div className="absolute left-5 top-5">
