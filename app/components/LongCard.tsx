@@ -2,7 +2,7 @@
 
 import { forwardRef, useImperativeHandle, useRef } from "react";
 import { toPng } from "html-to-image";
-import { cdnAsset } from "@/lib/asset";
+import { asset, cdnAsset } from "@/lib/asset";
 import { DIM_LABEL, DIM_DESC, BIAS_LABEL, BIAS_ADVICE } from "@/core/scoring";
 import type { Dim, Result, Bias } from "@/core/types";
 
@@ -51,7 +51,7 @@ export const LongCard = forwardRef<LongCardHandle, Props>(function LongCard({ re
         {/* 公仔 */}
         <div style={{ marginTop: 34, height: 780, borderRadius: 36, overflow: "hidden" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={cdnAsset(r.image)} alt="" crossOrigin="anonymous" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 30%" }} />
+          <img src={cdnAsset(r.image)} alt="" crossOrigin="anonymous" onError={(e) => { const t = e.currentTarget; if (!t.dataset.fb) { t.dataset.fb = "1"; t.removeAttribute("crossOrigin"); t.src = asset(r.image); } }} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 30%" }} />
         </div>
 
         <Divider />

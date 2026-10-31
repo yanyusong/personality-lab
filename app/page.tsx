@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { cdnAsset } from "@/lib/asset";
+import { asset, cdnAsset } from "@/lib/asset";
 import { ROLES } from "@/core/roles";
 
 const JOBS = ["互联网/技术", "学生", "金融/商务", "教育/研究", "医疗", "创意/媒体", "制造/工程", "管理", "自由职业", "公共部门"];
@@ -21,7 +21,7 @@ export default function Home() {
   return (
     <main className="min-h-dvh bg-cream">
       <div className="mx-auto max-w-[520px] px-5 pb-16 pt-10">
-        <div className="animate-fade-in">
+        <div>
           <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-[12px] font-semibold text-ink-2 shadow-sm">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-orange" />
             15 题 · 3 分钟 · 不用登录
@@ -78,7 +78,7 @@ export default function Home() {
             {ROLES.map((r) => (
               <div key={r.id} className="w-[104px] shrink-0">
                 <div className="overflow-hidden rounded-2xl bg-white shadow-sm" style={{ aspectRatio: "3/4" }}>
-                  <img src={cdnAsset(r.thumb)} alt={r.name} loading="lazy" decoding="async" width={312} height={416} className="h-full w-full object-cover" />
+                  <img src={cdnAsset(r.thumb)} alt={r.name} loading="lazy" decoding="async" width={312} height={416} className="h-full w-full object-cover" onError={(e) => { const t = e.currentTarget; if (!t.dataset.fb) { t.dataset.fb = "1"; t.src = asset(r.thumb); } }} />
                 </div>
                 <div className="mt-1.5 text-center text-[11.5px] font-semibold">{r.name}</div>
               </div>
