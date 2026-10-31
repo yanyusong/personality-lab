@@ -8,6 +8,7 @@ import { LongCard, type LongCardHandle } from "@/app/components/LongCard";
 import { analyze, DIM_DESC, DIM_LABEL, BIAS_LABEL, BIAS_ADVICE } from "@/core/scoring";
 import { asset, cdnAsset, BASE_PATH } from "@/lib/asset";
 import { getCachedImage, loadImage } from "@/lib/imgCache";
+import { track } from "@/lib/track";
 import type { Bias, Dim, Result } from "@/core/types";
 
 const ORDER: Dim[] = ["O", "C", "E", "A", "N"];
@@ -52,11 +53,15 @@ export default function ResultPage() {
   }, [res]);
 
   useEffect(() => {
-    const url = `${window.location.origin}${BASE_PATH}/?from=card`;
+    const url = `${window.location.origin}${BASE_PATH}/?from=card&utm_source=share&utm_medium=longimage`;
     QRCode.toDataURL(url, { margin: 1, width: 320, color: { dark: "#221F1C", light: "#FFFFFF" } })
       .then(setQr)
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (res) track("result_view", { role: res.primary.id, conf: Math.round(res.confidence * 100) });
+  }, [res]);
 
   const topBiases = useMemo(() => {
     if (!res) return [];
@@ -101,6 +106,7 @@ export default function ResultPage() {
       if (img) {
         setLongImg(img);
         setSavedHint("");
+        track("share_generate", { role: res?.primary.id ?? "" });
         setShowSave(true);
       }
     } catch (e) {

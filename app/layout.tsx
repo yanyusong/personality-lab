@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { Analytics } from "@/app/components/Analytics";
 
 export const metadata: Metadata = {
   title: "人格剧本 · 15 题测出你会怎么选",
@@ -20,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="" />
         <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
       </head>
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">{children}<Analytics /></body>
     </html>
   );
 }

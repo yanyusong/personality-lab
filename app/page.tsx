@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ROLES } from "@/core/roles";
+import { track } from "@/lib/track";
 
 const JOBS = ["互联网/技术", "学生", "金融/商务", "教育/研究", "医疗", "创意/媒体", "制造/工程", "管理", "自由职业", "公共部门"];
 
@@ -14,6 +15,7 @@ export default function Home() {
   const start = () => {
     sessionStorage.setItem("pp_ctx", JSON.stringify({ bio, job }));
     sessionStorage.removeItem("pp_answers");
+    track("start_test", { job });
     router.push("/test");
   };
 
