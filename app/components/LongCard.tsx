@@ -29,12 +29,24 @@ export const LongCard = forwardRef<LongCardHandle, Props>(function LongCard({ re
 
   return (
     <div style={{ position: "fixed", left: -99999, top: 0, pointerEvents: "none" }}>
-      <div ref={node} style={{ width: W, background: "#FFF8F0", padding: "80px 76px 70px", boxSizing: "border-box" }}>
-        {/* 头部 */}
-        <div style={{ fontSize: 24, fontWeight: 900, letterSpacing: 8, color: r.color }}>{r.en} · {r.no}</div>
-        <div style={{ fontSize: 112, fontWeight: 900, lineHeight: 1.05, marginTop: 10 }}>{r.name}</div>
-        <div style={{ fontSize: 34, fontWeight: 900, lineHeight: 1.5, marginTop: 22 }}>{r.verdict}</div>
-        <div style={{ fontSize: 25, color: "rgba(34,31,28,0.62)", marginTop: 10 }}>{r.oneLine}</div>
+      <div ref={node} style={{ width: W, background: "#FFF8F0", padding: "80px 76px 70px", boxSizing: "border-box", position: "relative" }}>
+        {/* 右上角二维码 */}
+        {qr && (
+          <div style={{ position: "absolute", top: 72, right: 72, textAlign: "center" }}>
+            <div style={{ background: "#fff", padding: 9, borderRadius: 16, boxShadow: "0 6px 18px rgba(34,31,28,0.10)" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={qr} alt="qr" style={{ width: 132, height: 132, display: "block" }} />
+            </div>
+            <div style={{ fontSize: 17, color: "rgba(34,31,28,0.55)", marginTop: 7 }}>扫码测你的</div>
+          </div>
+        )}
+        {/* 头部（右侧留出二维码位） */}
+        <div style={{ maxWidth: 760 }}>
+          <div style={{ fontSize: 24, fontWeight: 900, letterSpacing: 8, color: r.color }}>{r.en} · {r.no}</div>
+          <div style={{ fontSize: 112, fontWeight: 900, lineHeight: 1.05, marginTop: 10 }}>{r.name}</div>
+          <div style={{ fontSize: 34, fontWeight: 900, lineHeight: 1.5, marginTop: 22 }}>{r.verdict}</div>
+          <div style={{ fontSize: 25, color: "rgba(34,31,28,0.62)", marginTop: 10 }}>{r.oneLine}</div>
+        </div>
 
         {/* 公仔 */}
         <div style={{ marginTop: 34, height: 780, borderRadius: 36, overflow: "hidden" }}>
