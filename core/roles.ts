@@ -56,7 +56,7 @@ export const ROLES: Role[] = [
       name: "讨好者", desc: "压力下你开始讨好所有人，最后谁都没照顾好，包括自己。",
       signals: ["答应的事开始往后拖", "说话前先看别人脸色", "独处时觉得空"],
     },
-    partners: { easy: "记账人", hard: "标准件", tip: "让记账人帮你把承诺落到纸上，别只落在气氛里。" },
+    partners: { easy: "记账人", hard: "螺丝钉", tip: "让记账人帮你把承诺落到纸上，别只落在气氛里。" },
   },
   {
     id: "mender", no: "03", name: "修补匠", en: "MENDER",
@@ -112,7 +112,7 @@ export const ROLES: Role[] = [
       name: "空心人", desc: "压力下你还在安抚所有人，但自己已经空了。",
       signals: ["笑着说“没事”但眼神发直", "开始回避群聊", "睡眠变浅"],
     },
-    partners: { easy: "标准件", hard: "破局者", tip: "让破局者替你说出你不敢说的那句硬话。" },
+    partners: { easy: "螺丝钉", hard: "破局者", tip: "让破局者替你说出你不敢说的那句硬话。" },
   },
   {
     id: "strategist", no: "05", name: "布局者", en: "STRATEGIST",
@@ -140,7 +140,7 @@ export const ROLES: Role[] = [
       name: "控制狂", desc: "压力下你开始要求每一步都按计划走，别人喘不过气。",
       signals: ["反复检查别人的进度", "对偏差零容忍", "开始自己动手做本该别人做的事"],
     },
-    partners: { easy: "点火者", hard: "采样者", tip: "让点火者帮你启动，你帮他收口。" },
+    partners: { easy: "点火者", hard: "尝鲜者", tip: "让点火者帮你启动，你帮他收口。" },
   },
   {
     id: "weaver", no: "06", name: "结网者", en: "WEAVER",
@@ -224,10 +224,10 @@ export const ROLES: Role[] = [
       name: "怨气罐", desc: "压力下账本翻出来，你开始清算所有旧账。",
       signals: ["突然提起很久以前的事", "语气变冷", "开始记录别人的失误"],
     },
-    partners: { easy: "点火者", hard: "采样者", tip: "让点火者带你放松，你帮他落地。" },
+    partners: { easy: "点火者", hard: "尝鲜者", tip: "让点火者带你放松，你帮他落地。" },
   },
   {
-    id: "sampler", no: "09", name: "采样者", en: "SAMPLER",
+    id: "sampler", no: "09", name: "尝鲜者", en: "TASTER",
     color: "#8C9BB5", accent: "#FFD166", image: "/roles/09_sampler.webp",
     thumb: "/roles/thumbs/09_sampler.webp",
     axes: { speed: 0.35, risk: 0.6, relation: 0.5 },
@@ -252,10 +252,10 @@ export const ROLES: Role[] = [
       name: "烂尾王", desc: "压力下你开了更多新坑，来逃避收不了尾的旧坑。",
       signals: ["同时开三个新项目", "旧项目不敢打开", "用“在学习”解释没进展"],
     },
-    partners: { easy: "标准件", hard: "布局者", tip: "让标准件帮你把一件做完，你负责找到那件事。" },
+    partners: { easy: "螺丝钉", hard: "布局者", tip: "让螺丝钉帮你把一件做完，你负责找到那件事。" },
   },
   {
-    id: "starling", no: "10", name: "惊弓者", en: "STARLING",
+    id: "starling", no: "10", name: "预警者", en: "SENTINEL",
     color: "#4C8DD9", accent: "#FF8A5B", image: "/roles/10_starling.webp",
     thumb: "/roles/thumbs/10_starling.webp",
     axes: { speed: 0.8, risk: 0.45, relation: 0.55 },
@@ -280,7 +280,7 @@ export const ROLES: Role[] = [
       name: "刺猬", desc: "压力下你把刺全部竖起来，谁靠近扎谁。",
       signals: ["对中性的话过度反应", "开始删好友/退群", "睡眠和食欲变化"],
     },
-    partners: { easy: "缓冲垫", hard: "标准件", tip: "让缓冲垫替你接住第一波情绪，你再说事。" },
+    partners: { easy: "缓冲垫", hard: "螺丝钉", tip: "让缓冲垫替你接住第一波情绪，你再说事。" },
   },
   {
     id: "backstop", no: "11", name: "兜底者", en: "BACKSTOP",
@@ -308,10 +308,10 @@ export const ROLES: Role[] = [
       name: "沉默的火山", desc: "压力下你什么都不说，直到某天突然全部不干了。",
       signals: ["开始少说话", "对工作失去兴趣", "突然请长假"],
     },
-    partners: { easy: "惊弓者", hard: "采样者", tip: "让惊弓者替你说出情绪，你替他稳住场面。" },
+    partners: { easy: "预警者", hard: "尝鲜者", tip: "让预警者替你说出情绪，你替他稳住场面。" },
   },
   {
-    id: "standard", no: "12", name: "标准件", en: "STANDARD",
+    id: "standard", no: "12", name: "螺丝钉", en: "SCREW",
     color: "#8A929C", accent: "#5B8DEF", image: "/roles/12_standard.webp",
     thumb: "/roles/thumbs/12_standard.webp",
     axes: { speed: 0.45, risk: 0.3, relation: 0.7 },
@@ -336,7 +336,7 @@ export const ROLES: Role[] = [
       name: "死机", desc: "压力下规则失效，你会僵在原地等一个不存在的说明书。",
       signals: ["反复确认同一件事", "不敢做决定", "对模糊任务产生强烈焦虑"],
     },
-    partners: { easy: "采样者", hard: "破局者", tip: "让采样者带来新可能，你把它变成可执行的流程。" },
+    partners: { easy: "尝鲜者", hard: "破局者", tip: "让尝鲜者带来新可能，你把它变成可执行的流程。" },
   },
 ];
 
