@@ -1,0 +1,4 @@
+:HL["/personality-lab/_next/static/chunks/16h-zx4heumcv.css","style"]
+2:[["children",{"s":"__PAGE__","h":160}]]
+1:[["children",{"s":"result","h":96,"c":"$Q2"}]]
+0:{"b":"eI7YXxR2N9DlIni3s-HuN","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
