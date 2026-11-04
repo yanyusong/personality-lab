@@ -9,6 +9,8 @@ export interface SubResult {
   score: number;
   sigma: number;
   text: string;
+  /** 分数极性：negative 表示高分=问题更重，不能当优势展示 */
+  polarity?: "positive" | "negative";
 }
 
 export interface DimResult {
@@ -57,19 +59,39 @@ export function clearResults() {
   if (typeof window !== "undefined") localStorage.removeItem(KEY);
 }
 
-/** 从子维度分数生成优势 / 盲区（纯规则，按分数阈值取，避免把低分项说成优势） */
+/** 从子维度分数生成优势 / 盲区（考虑极性，避免把「问题更重」说成优势） */
 export function deriveStrengthsBlindspots(subs: SubResult[]): { strengths: string[]; blindspots: string[] } {
-  const sorted = [...subs].sort((a, b) => b.score - a.score);
-  const highs = sorted.filter((s) => s.score >= 60).slice(0, 2);
-  const lows = sorted.filter((s) => s.score <= 40).reverse().slice(0, 2);
+  const pos = subs.filter((s) => (s.polarity ?? "positive") === "positive");
+  const neg = subs.filter((s) => s.polarity === "negative");
 
-  const strengths = (highs.length > 0 ? highs : sorted.slice(0, 1)).map(
-    (s) => `${s.name}：${s.text}`
-  );
-  const blindspots = (lows.length > 0 ? lows : sorted.slice(-1)).map(
-    (s) => `${s.name}：${s.text}`
-  );
-  return { strengths, blindspots };
+  const strengths = pos
+    .filter((s) => s.score >= 60)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 2)
+    .map((s) => `${s.name}：${s.text}`);
+
+  const blindspots = [
+    ...neg.filter((s) => s.score >= 60),
+    ...pos.filter((s) => s.score <= 40),
+  ]
+    .sort((a, b) => {
+      // 负极性子维度按分数从高到低（问题越重越靠前）；正极性子维度按分数从低到高
+      const ap = a.polarity === "negative" ? -a.score : a.score;
+      const bp = b.polarity === "negative" ? -b.score : b.score;
+      return ap - bp;
+    })
+    .slice(0, 2)
+    .map((s) => `${s.name}：${s.text}`);
+
+  const topPos = pos.sort((a, b) => b.score - a.score)[0];
+  const fallbackStrengths =
+    strengths.length > 0 ? strengths : topPos && topPos.score >= 50 ? [`${topPos.name}：${topPos.text}`] : [];
+  const fallbackBlindspots =
+    blindspots.length > 0
+      ? blindspots
+      : [...subs].sort((a, b) => a.score - b.score).slice(0, 1).map((s) => `${s.name}：${s.text}`);
+
+  return { strengths: fallbackStrengths, blindspots: fallbackBlindspots };
 }
 
 const fmtDate = (iso: string) => {
@@ -97,7 +119,8 @@ export function exportMarkdown(): string {
   lines.push("| 维度 | 总体分 | 置信度 | 一句话 |");
   lines.push("|---|---|---|---|");
   for (const d of dims) {
-    const top = [...d.subs].sort((a, b) => b.score - a.score)[0];
+    const adj = (s: SubResult) => (s.polarity === "negative" ? 100 - s.score : s.score);
+    const top = [...d.subs].sort((a, b) => adj(b) - adj(a))[0];
     lines.push(`| ${d.name} | ${d.overall} | ${Math.round(d.confidence * 100)}% | ${top ? top.text : ""} |`);
   }
   lines.push("");

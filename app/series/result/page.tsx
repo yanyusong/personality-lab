@@ -40,19 +40,31 @@ function ResultInner() {
     try {
       const answers = JSON.parse(raw);
       const s = scoreDim(items, answers, subDims);
-      const subs: SubResult[] = subDims.map((id) => ({
-        id,
-        name: meta.subDims.find((x) => x.id === id)?.name ?? id,
-        score: s.subs[id].score,
-        sigma: s.subs[id].sigma,
-        text: describeSub(id, s.subs[id].score),
-      }));
+      const subs: SubResult[] = subDims.map((id) => {
+        const sd = meta.subDims.find((x) => x.id === id);
+        return {
+          id,
+          name: sd?.name ?? id,
+          score: s.subs[id].score,
+          sigma: s.subs[id].sigma,
+          text: describeSub(id, s.subs[id].score),
+          polarity: sd?.polarity ?? "positive",
+        };
+      });
       const { strengths, blindspots } = deriveStrengthsBlindspots(subs);
+      // 负向特质（高分=问题更重）在算总分前先翻转，避免「自我苛责很低」把总分拉低
+      const adjusted = (id: string, sc: number) => {
+        const sd = meta.subDims.find((x) => x.id === id);
+        return sd?.polarity === "negative" ? 100 - sc : sc;
+      };
+      const overall = Math.round(
+        subDims.reduce((a, id) => a + adjusted(id, s.subs[id].score), 0) / subDims.length
+      );
       const r: DimResult = {
         dim: dimId,
         name: meta.name,
         date: new Date().toISOString(),
-        overall: s.overall,
+        overall,
         confidence: s.confidence,
         answered: s.answered,
         subs,
@@ -131,7 +143,12 @@ function ResultInner() {
             {result.subs.map((s) => (
               <div key={s.id}>
                 <div className="flex items-baseline justify-between text-[12.5px]">
-                  <span className="font-bold">{s.name}</span>
+                  <span className="font-bold">
+                    {s.name}
+                    {s.polarity === "negative" && (
+                      <span className="ml-1 text-[10.5px] font-normal text-ink-2/45">（越低越好）</span>
+                    )}
+                  </span>
                   <span className="text-ink-2/60">{s.score}</span>
                 </div>
                 <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-black/8">
@@ -153,6 +170,9 @@ function ResultInner() {
           <div className="card p-5">
             <div className="text-[13px] font-bold text-orange">三条优势</div>
             <ul className="mt-2 space-y-2 text-[13px] leading-6 text-ink-2">
+              {result.strengths.length === 0 && (
+                <li className="text-[12.5px] text-ink-2/55">这个维度里暂无明显优势项，可以补测其他维度看看。</li>
+              )}
               {result.strengths.map((s, i) => (
                 <li key={i} className="flex gap-2">
                   <span className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-orange" />

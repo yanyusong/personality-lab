@@ -1,3 +1,13 @@
+import { SELF_EVAL_TEXT } from "./text/selfEval";
+import { EMOTION_TEXT } from "./text/emotion";
+import { VALUES_TEXT } from "./text/values";
+import { TIME_TEXT } from "./text/time";
+import { MONEY_TEXT } from "./text/money";
+import { PARENTS_TEXT } from "./text/parents";
+import { COLLEAGUE_TEXT } from "./text/colleague";
+import { BOSS_TEXT } from "./text/boss";
+import { FRIEND_TEXT } from "./text/friend";
+
 // 把子维度分数翻译成人话（纯规则，不调模型）
 // 每个子维度给出高/低两端的行为描述，中间段给中性描述
 
@@ -8,7 +18,7 @@ export interface SubText {
   mid: string;
 }
 
-export const SUB_TEXT: Record<string, SubText> = {
+const BASE_TEXT: Record<string, SubText> = {
   // 性格
   O: {
     name: "开放性",
@@ -127,6 +137,19 @@ export const SUB_TEXT: Record<string, SubText> = {
     low: "冲突后容易僵住，等对方先低头",
     mid: "能修复，但需要时间消化",
   },
+};
+
+export const SUB_TEXT: Record<string, SubText> = {
+  ...BASE_TEXT,
+  ...SELF_EVAL_TEXT,
+  ...EMOTION_TEXT,
+  ...VALUES_TEXT,
+  ...TIME_TEXT,
+  ...MONEY_TEXT,
+  ...PARENTS_TEXT,
+  ...COLLEAGUE_TEXT,
+  ...BOSS_TEXT,
+  ...FRIEND_TEXT,
 };
 
 export function describeSub(id: string, score: number): string {

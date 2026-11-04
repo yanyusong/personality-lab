@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ACTIVE_DIMS, GROUPS } from "@/core/dims";
+import { ACTIVE_DIMS, DIMS } from "@/core/dims";
 
 export default function SeriesPage() {
   return (
@@ -54,11 +54,13 @@ export default function SeriesPage() {
         </div>
 
         <div className="mt-8 rounded-2xl bg-white/70 p-4 text-[12px] leading-5 text-ink-2/70">
-          <div className="font-bold text-ink-2">还有 10 个维度正在准备</div>
+          <div className="font-bold text-ink-2">
+            {ACTIVE_DIMS.length === DIMS.length
+              ? `全部 ${DIMS.length} 个维度已开放`
+              : `已开放 ${ACTIVE_DIMS.length} / ${DIMS.length} 个维度`}
+          </div>
           <div className="mt-1">
-            {GROUPS.core.name}：自我评价、情绪与压力、价值观与意义；
-            {GROUPS.doing.name}：时间与精力、金钱观；
-            {GROUPS.relation.name}：父母关系、同事关系、上下级关系、朋友与社交边界。
+            每测一个维度，档案就多一节。建议先测「性格」「工作」「学习」，再按你最近在意的事挑着测。
           </div>
         </div>
 

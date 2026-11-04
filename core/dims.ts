@@ -22,6 +22,12 @@ export interface SubDim {
   id: string;
   name: string;
   desc: string;
+  /**
+   * 分数极性。默认 positive：分越高越是优势。
+   * negative：分越高代表这个「问题」越重（如自我苛责、内耗、拖延），
+   * 结果页会把它归入盲区，而不会被误当成优势。
+   */
+  polarity?: "positive" | "negative";
 }
 
 export interface DimMeta {
@@ -93,12 +99,12 @@ export const DIMS: DimMeta[] = [
     group: "core",
     tagline: "你怎么看你自己",
     color: "#a78bfa",
-    active: false,
+    active: true,
     subDims: [
       { id: "esteem", name: "自尊稳定性", desc: "外界评价对自我价值的影响" },
-      { id: "harsh", name: "自我苛责", desc: "犯错后的自我攻击强度" },
-      { id: "impostor", name: "冒充者感", desc: "是否总觉得成功不属于自己" },
-      { id: "critique", name: "批评敏感度", desc: "被指出问题时的防御反应" },
+      { id: "harsh", name: "自我苛责", desc: "犯错后的自我攻击强度" , polarity: "negative" },
+      { id: "impostor", name: "冒充者感", desc: "是否总觉得成功不属于自己" , polarity: "negative" },
+      { id: "critique", name: "批评敏感度", desc: "被指出问题时的防御反应" , polarity: "negative" },
     ],
   },
   {
@@ -107,12 +113,12 @@ export const DIMS: DimMeta[] = [
     group: "core",
     tagline: "压力来了你怎么运转",
     color: "#ffd166",
-    active: false,
+    active: true,
     subDims: [
       { id: "regulate", name: "情绪调节", desc: "难受时怎么让自己缓过来" },
-      { id: "react", name: "压力反应", desc: "高压下的行为变化" },
+      { id: "react", name: "压力反应", desc: "高压下的行为变化" , polarity: "negative" },
       { id: "recover", name: "恢复速度", desc: "从打击里回到正常的速度" },
-      { id: "ruminate", name: "内耗", desc: "反复想同一件事的程度" },
+      { id: "ruminate", name: "内耗", desc: "反复想同一件事的程度" , polarity: "negative" },
     ],
   },
   {
@@ -121,7 +127,7 @@ export const DIMS: DimMeta[] = [
     group: "core",
     tagline: "你到底想要什么",
     color: "#ff9f68",
-    active: false,
+    active: true,
     subDims: [
       { id: "priority", name: "优先级", desc: "金钱、成就、关系、自由谁在前" },
       { id: "longterm", name: "长期目标", desc: "是否有清晰的三五年方向" },
@@ -135,11 +141,11 @@ export const DIMS: DimMeta[] = [
     group: "doing",
     tagline: "你的精力花在哪",
     color: "#94d2bd",
-    active: false,
+    active: true,
     subDims: [
       { id: "rhythm", name: "精力节律", desc: "一天里什么时候最能干" },
       { id: "focus", name: "注意力", desc: "被打断后能否快速回来" },
-      { id: "delay", name: "拖延机制", desc: "为什么明知道要做却不动" },
+      { id: "delay", name: "拖延机制", desc: "为什么明知道要做却不动" , polarity: "negative" },
       { id: "restore", name: "恢复方式", desc: "靠什么真正回血" },
     ],
   },
@@ -149,7 +155,7 @@ export const DIMS: DimMeta[] = [
     group: "doing",
     tagline: "钱在你手里是什么",
     color: "#e0a458",
-    active: false,
+    active: true,
     subDims: [
       { id: "spend", name: "消费倾向", desc: "花钱的冲动与克制" },
       { id: "save", name: "储蓄倾向", desc: "为未来留多少" },
@@ -163,12 +169,12 @@ export const DIMS: DimMeta[] = [
     group: "relation",
     tagline: "你和来处的关系",
     color: "#d98c8c",
-    active: false,
+    active: true,
     subDims: [
       { id: "attach", name: "依恋模式", desc: "亲近与独立的平衡" },
       { id: "boundary", name: "边界感", desc: "能否分开「他们想要的」和「我想要的」" },
-      { id: "guilt", name: "愧疚感", desc: "拒绝父母时的心理负担" },
-      { id: "expect", name: "期待压力", desc: "被期待压住的程度" },
+      { id: "guilt", name: "愧疚感", desc: "拒绝父母时的心理负担" , polarity: "negative" },
+      { id: "expect", name: "期待压力", desc: "被期待压住的程度" , polarity: "negative" },
     ],
   },
   {
@@ -177,7 +183,7 @@ export const DIMS: DimMeta[] = [
     group: "relation",
     tagline: "平级之间的你",
     color: "#8fb8de",
-    active: false,
+    active: true,
     subDims: [
       { id: "trust", name: "信任建立", desc: "多久能把同事当自己人" },
       { id: "conflictStyle", name: "冲突处理", desc: "分歧时正面说还是绕开" },
@@ -191,11 +197,11 @@ export const DIMS: DimMeta[] = [
     group: "relation",
     tagline: "面对权威的你",
     color: "#6c8ebf",
-    active: false,
+    active: true,
     subDims: [
       { id: "authority", name: "权威态度", desc: "面对上级时的自然反应" },
       { id: "report", name: "汇报风格", desc: "报喜还是报忧、主动还是被动" },
-      { id: "evalSensitive", name: "被评价敏感度", desc: "被点评时的心理波动" },
+      { id: "evalSensitive", name: "被评价敏感度", desc: "被点评时的心理波动" , polarity: "negative" },
       { id: "pushback", name: "向上反馈", desc: "能否对上级说不" },
     ],
   },
@@ -205,7 +211,7 @@ export const DIMS: DimMeta[] = [
     group: "relation",
     tagline: "非功利关系里的你",
     color: "#c9a0dc",
-    active: false,
+    active: true,
     subDims: [
       { id: "energy", name: "社交能量", desc: "社交是充电还是耗电" },
       { id: "refuse", name: "拒绝能力", desc: "不想去时能不能直说" },
