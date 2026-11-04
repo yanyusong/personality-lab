@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ROLES } from "@/core/roles";
 import { track } from "@/lib/track";
@@ -69,6 +70,21 @@ export default function Home() {
             用于自我探索，不构成心理诊断。结果仅存在你的浏览器里。
           </p>
         </div>
+
+        <Link
+          href="/series"
+          className="card mt-4 flex items-center justify-between gap-3 p-4 transition hover:-translate-y-0.5 hover:shadow-md"
+        >
+          <div>
+            <div className="text-[14px] font-black">
+              自我认知 <span className="text-orange">360</span>
+            </div>
+            <div className="mt-0.5 text-[12px] text-ink-2/65">
+              性格之外，再看工作、学习、关系里的你
+            </div>
+          </div>
+          <span className="shrink-0 text-[12px] font-bold text-orange">去测 →</span>
+        </Link>
 
         <div className="mt-9">
           <div className="mb-3 text-[13px] font-bold">12 种人格角色</div>
